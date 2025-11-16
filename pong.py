@@ -1,10 +1,31 @@
 import pygame
 import random
 
+
 class Game:
     def __init__(self):
         self.display = pygame.display.set_mode((800,600))
+        self.ball = Ball()
+        self.paddle_1 = Padle(50)
+        self.paddle_2 = Padle(800-80)
+        self.clock = pygame.time.Clock()
+        self.clock.tick(60)
 
+    def run(self):
+        while True:
+            pygame.event.get()
+
+            keys =pygame.key.get_pressed()
+            if keys [pygame.K_UP]:
+                self.paddle_1.move("UP")
+            if keys [pygame.K_DOWN]:
+                self.paddle_1.move("DOWN")
+
+            if keys [pygame.K_w]:
+                self.paddle_2.move("UP")
+            if keys [pygame.K_s]:
+                self.paddle_2.move("DOWN")
+                
 
 WHITE = (255,255,255)
 class Padle:
@@ -47,8 +68,21 @@ class Ball:
     def changey(self):
         self.y_direction = - self.y_direction
 
+    def move(self):
+        self.x+= self.speed*self.x_direction
+        self.y+= self.speed*self.y_direction
+        
 
+    def paddleCollision(self,paddle,paddle_direction):
+        match(paddle_direction):
+            case "LEFT":
+                return self.x < paddle.x + paddle.width and paddle.y <self.y < paddle.y + paddle.height
+            case "RIGHT":
+                return self.x > paddle.x and paddle.y <self.y < paddle.y + paddle.height
+            
 
+    def wallCollision(self):
+        return self.y  < 0 or self.y>600 - self.size
 
 
 
