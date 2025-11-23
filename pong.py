@@ -11,6 +11,8 @@ class Game:
         self.clock = pygame.time.Clock()
         self.clock.tick(60)
 
+        
+
     def run(self):
         while True:
             pygame.event.get()
@@ -25,7 +27,31 @@ class Game:
                 self.paddle_2.move("UP")
             if keys [pygame.K_s]:
                 self.paddle_2.move("DOWN")
-                
+            
+
+            if self.ball.wallCollision():
+                self.ball.changey()
+
+            if self.ball.paddleCollision(self.paddle_1,"LEFT"):
+                self.ball.changex(1)
+
+            if self.ball.paddleCollision(self.paddle_2,"RIGHT"):
+                self.ball.changex(-1)
+
+            if self.ball.x < 0:
+                self.ball.reset(1)
+
+            if self.ball.x > 800:
+                self.ball.reset(-1)
+
+            self.paddle_1.show(self.display)
+            self.paddle_2.show(self.display)
+            self.ball.show(self.display)
+            pygame.display.update()
+            self.ball.move()
+            self.display.fill((0,0,0))
+            self.clock.tick(60)
+
 
 WHITE = (255,255,255)
 class Padle:
@@ -50,7 +76,7 @@ class Padle:
                 pass
 
     def show(self,display):
-        pygame.draw.rect(display , self.colour, (self.x , self.y, self.height, self.width))
+        pygame.draw.rect(display , self.colour, (self.x , self.y, self.width, self.height))
 
 class Ball:
     def __init__(self):
@@ -83,6 +109,16 @@ class Ball:
 
     def wallCollision(self):
         return self.y  < 0 or self.y>600 - self.size
+    
+    def show(self,display):
+        pygame.draw.circle(display , self.colour, (self.x, self.y), self.size)
+
+    def reset(self,x_direction):
+        self.x=800/2 - self.size/2
+        self.y=600/2 - self.size/2
+        self.x_direction = x_direction
+        self.y_direction= random.choice([1,-1])
+
 
 
 
@@ -90,5 +126,8 @@ class Ball:
   
 def main():
     pygame.init()
+    
+    GAME=Game()
+    GAME.run()
 
 main()
